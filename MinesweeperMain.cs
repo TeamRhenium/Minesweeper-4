@@ -1,369 +1,363 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-// testvano e - ba4ka, ne pipaj!!!!!!!
-
-namespace mini4ki
+﻿namespace Minesweeper
 {
-    public class MinesweeperMain
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+
+    public class Mines
     {
-        public class ScoreRecord
+        public static void Main(string[] args)
         {
-            string personName;
-            int scorePoints;
+            string inputCommand = string.Empty;
 
-            public string PersonName
-            {
-                get { return personName; }
-                set { personName = value; }
-            }
-            public int ScorePoints
-            {
-                get { return scorePoints; 
-				
-				
-				}
-                set { scorePoints = value; }
-            }
+            char[,] playingField = CreatePlayingField();
+            char[,] bombsField = PlaceBombsOnField();
 
-            public ScoreRecord() { }
+            int personalScore = 0;
 
-            public ScoreRecord(string personName, int points)
-            {
-                this.personName = personName;
-                this.scorePoints = points;
-            }
+            bool isBombHit = false;
 
-        }
+            List<Score> scoreBoardTopPlayers = new List<Score>(6);
 
-        static void Main(string[] args)
-        {
-            string selectedCommand = string.Empty;
-            char[,] playground = CreateWhiteBoard();
-            char[,] boomBoard = CreateBombBoard();
-            int counter = 0;
-            bool boomed = false;
+            int row = 0;
+            int col = 0;
 
+            bool isNewGame = true;
+            bool isWon = false;
 
-            List<ScoreRecord> champions = new List<ScoreRecord>(6);
-            int rowIndex = 0;
+            const int MaxScore = 35;
 
-
-
-            int columnIndex = 0;
-            bool welcomeFlag = true;
-            const int MAX_REVEALED_CELLS = 35;
-            bool flag = false;
-            
             do
             {
-                if (welcomeFlag)
+                if (isNewGame)
                 {
-                    Console.WriteLine("Welcome to the game “Minesweeper”. Try to reveal all cells without mines." +
-                    " Use 'top' to view the scoreboard, 'restart' to start a new game and 'exit' to quit the game.");
-                    PrintBoard(playground);
-                    welcomeFlag = false;
+                    Console.WriteLine("Let's play some Minesweeper! ");
+                    Console.WriteLine("Find the cells without bombsField. If you hit a bomb the game ends.");
+                    Console.WriteLine("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+                    Console.WriteLine("Menu:");
+                    Console.WriteLine("'top' - show the score board");
+                    Console.WriteLine("'restart' - start a new game");
+                    Console.WriteLine("'exit' - exit the game");
+                    Console.WriteLine("'4x7' - example for entering row and col");
+                    Console.WriteLine("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+                    Console.WriteLine();
+
+                    DrawPlayingField(playingField);
+
+                    isNewGame = false;
                 }
-                Console.Write("Enter row and column: ");
-                selectedCommand = Console.ReadLine().Trim();
-                if (selectedCommand.Length >= 3)
+
+                Console.Write("Enter row and column : ");
+                inputCommand = Console.ReadLine().Trim();
+
+                if (inputCommand.Length >= 3)
                 {
-                    if (int.TryParse(selectedCommand[0].ToString(), out rowIndex) &&
-                    int.TryParse(selectedCommand[2].ToString(), out columnIndex) &&
-                        rowIndex <= playground.GetLength(0) && columnIndex <= playground.GetLength(1))
+                    if (int.TryParse(inputCommand[0].ToString(), out row) &&
+                        int.TryParse(inputCommand[2].ToString(), out col) &&
+                        row <= playingField.GetLength(0) &&
+                        col <= playingField.GetLength(1))
                     {
-
-
-                        selectedCommand = "turn";
+                        inputCommand = "turn";
                     }
                 }
-                switch (selectedCommand)
+
+                switch (inputCommand)
                 {
                     case "top":
-                        PrintScoreBoard(champions);
+                        ShowScoreBoard(scoreBoardTopPlayers);
                         break;
                     case "restart":
-                        playground = CreateWhiteBoard();
-                        boomBoard = CreateBombBoard();
-                        PrintBoard(playground);
-                        boomed = false;
-                        welcomeFlag = false;
+                        playingField = CreatePlayingField();
+
+                        bombsField = PlaceBombsOnField();
+
+                        DrawPlayingField(playingField);
+
+                        isBombHit = false;
+                        isNewGame = false;
                         break;
                     case "exit":
-                        Console.WriteLine("Good bye!");
+                        Console.WriteLine("Good bye.");
                         break;
                     case "turn":
-                        if (boomBoard[rowIndex, columnIndex] != '*')
+                        if (bombsField[row, col] != '*')
                         {
-                            if (boomBoard[rowIndex, columnIndex] == '-')
+                            if (bombsField[row, col] == '-')
                             {
-                                MakeAMove(playground, boomBoard, rowIndex, columnIndex);
-                                counter++;
+                                SetSurroundingBombsCount(playingField, bombsField, row, col);
+                                personalScore++;
                             }
-                            if (MAX_REVEALED_CELLS == counter)
+
+                            if (MaxScore == personalScore)
                             {
-                                flag = true;
+                                isWon = true;
                             }
                             else
                             {
-                                PrintBoard(playground);
+                                DrawPlayingField(playingField);
                             }
                         }
                         else
                         {
-                            boomed = true;
-
-
+                            isBombHit = true;
                         }
+
                         break;
                     default:
-                        Console.WriteLine("\nIllegal move!\n");
+                        Console.WriteLine("Wrong command.");
                         break;
                 }
-                if (boomed)
+
+                if (isBombHit)
                 {
-                    PrintBoard(boomBoard);
-                    Console.Write("\nBooooom! You were killed by a mine. You revealed {0} cells without mines."+
-                        "Please enter your name for the top scoreboard: ",counter);
-                    string personName = Console.ReadLine();
-                    ScoreRecord record = new ScoreRecord(personName, counter);
-                    if (champions.Count <5)
+                    DrawPlayingField(bombsField);
+                    Console.WriteLine("You just hit a bomb. Sorry.");
+                    Console.WriteLine("Enter your nickname for the score board: ", personalScore);
+                    string nickname = Console.ReadLine();
+                    Score playerPersonalScore = new Score(nickname, personalScore);
+                    if (scoreBoardTopPlayers.Count < 5)
                     {
-                        champions.Add(record);
-
-
+                        scoreBoardTopPlayers.Add(playerPersonalScore);
                     }
                     else
                     {
-                        for (int i = 0; i < champions.Count; i++)
+                        for (int i = 0; i < scoreBoardTopPlayers.Count; i++)
                         {
-                            if (champions[i].ScorePoints < record.ScorePoints)
+                            if (scoreBoardTopPlayers[i].PlayerPoints < playerPersonalScore.PlayerPoints)
                             {
-                                champions.Insert(i, record);
-                                champions.RemoveAt(champions.Count-1);
+                                scoreBoardTopPlayers.Insert(i, playerPersonalScore);
+                                scoreBoardTopPlayers.RemoveAt(scoreBoardTopPlayers.Count - 1);
                                 break;
                             }
                         }
                     }
-                    champions.Sort(delegate(ScoreRecord r1, ScoreRecord r2)
-                    { return r2.PersonName.CompareTo(r1.PersonName); });
-                    champions.Sort(delegate(ScoreRecord r1,ScoreRecord r2)
-                    {return r2.ScorePoints.CompareTo(r1.ScorePoints);  });
-                    PrintScoreBoard(champions);
-                    
-					
-					playground = CreateWhiteBoard();
-                    boomBoard = CreateBombBoard();
-                    counter = 0;
-                    boomed = false;
-                    welcomeFlag = true;
+
+                    scoreBoardTopPlayers.Sort((Score firstPlayer, Score secondPlayer) => secondPlayer.PlayerName.CompareTo(firstPlayer.PlayerName));
+                    scoreBoardTopPlayers.Sort((Score firstPlayer, Score secondPlayer) => secondPlayer.PlayerPoints.CompareTo(firstPlayer.PlayerPoints));
+                    ShowScoreBoard(scoreBoardTopPlayers);
+
+                    playingField = CreatePlayingField();
+                    bombsField = PlaceBombsOnField();
+
+                    personalScore = 0;
+
+                    isBombHit = false;
+                    isNewGame = true;
                 }
-                if (flag)
+
+                if (isWon)
                 {
-                    Console.WriteLine("\nYou revealed all 35 cells.");
-                    PrintBoard(boomBoard);
-                    Console.WriteLine("Please enter your name for the top scoreboard: ");
-                    string personName = Console.ReadLine();
-                    ScoreRecord record = new ScoreRecord(personName, counter);
-                    champions.Add(record);
-                    PrintScoreBoard(champions);
-                    playground = CreateWhiteBoard();
-                    boomBoard = CreateBombBoard();
-                    counter = 0;
-                    flag = false;
-                    welcomeFlag = true;
+                    Console.WriteLine("Congrats! You won the game!");
+
+                    DrawPlayingField(bombsField);
+
+                    Console.WriteLine("Enter your nickname for the score board: ");
+                    string playerNickname = Console.ReadLine();
+
+                    Score playerCurrentScore = new Score(playerNickname, personalScore);
+                    scoreBoardTopPlayers.Add(playerCurrentScore);
+                    ShowScoreBoard(scoreBoardTopPlayers);
+
+                    playingField = CreatePlayingField();
+                    bombsField = PlaceBombsOnField();
+                    personalScore = 0;
+
+                    isWon = false;
+                    isNewGame = true;
                 }
-            } 
-            while (selectedCommand != "exit");
+            }
+            while (inputCommand != "exit");
 
-
-            Console.WriteLine("Made by Pavlin Panev 2010 - all rights reserved!");
-            Console.WriteLine("Press any key to exit.");
+            Console.WriteLine("Press any key to exit the game.");
             Console.Read();
         }
-        private static void PrintScoreBoard(List<ScoreRecord> topRecords)
+
+        private static void ShowScoreBoard(List<Score> allScores)
         {
-            Console.WriteLine("\nScoreboard:");
-            if (topRecords.Count > 0)
+            Console.WriteLine("Points:");
+
+            if (allScores.Count > 0)
             {
-                for (int i = 0; i < topRecords.Count; i++)
+                for (int i = 0; i < allScores.Count; i++)
                 {
-                    Console.WriteLine("{0}. {1} --> {2} cells", i + 1, topRecords[i].PersonName, topRecords[i].ScorePoints);
+                    Console.WriteLine("{0}. {1} --> {2} points", i + 1, allScores[i].PlayerName, allScores[i].PlayerPoints);
                 }
+
                 Console.WriteLine();
             }
             else
             {
-                Console.WriteLine("No records to display!\n");
+                Console.WriteLine("Empty score board.");
             }
         }
-        private static void MakeAMove(char[,] board,char[,] boomBoard, int rowIndex, int columnIndex)
+
+        private static void SetSurroundingBombsCount(char[,] bombsField, char[,] allBombs, int bombFieldRow, int bombFieldCol)
         {
-            char howManyBombs = CalculateHowManyBombs(boomBoard, rowIndex, columnIndex);
-            boomBoard[rowIndex, columnIndex] = howManyBombs;
-            board[rowIndex, columnIndex] = howManyBombs;
+            char surroundingBombs = GetSurroundingBombsCount(allBombs, bombFieldRow, bombFieldCol);
+            allBombs[bombFieldRow, bombFieldCol] = surroundingBombs;
+            bombsField[bombFieldRow, bombFieldCol] = surroundingBombs;
         }
-        private static void PrintBoard(char[,] board)
+
+        private static void DrawPlayingField(char[,] board)
         {
-            int boardRows = board.GetLength(0);
-            int boardColumns = board.GetLength(1);
-            Console.WriteLine("\n    0 1 2 3 4 5 6 7 8 9");
+            int playingFieldRows = board.GetLength(0);
+            int playingFieldCols = board.GetLength(1);
+
+            Console.WriteLine("    0 1 2 3 4 5 6 7 8 9");
             Console.WriteLine("   ---------------------");
-            for (int i = 0; i < boardRows; i++)
+
+            for (int i = 0; i < playingFieldRows; i++)
             {
                 Console.Write("{0} | ", i);
-                for (int j = 0; j < boardColumns; j++)
+
+                for (int j = 0; j < playingFieldCols; j++)
                 {
-                    Console.Write(string.Format("{0} ",board[i, j]));
+                    Console.Write(string.Format("{0} ", board[i, j]));
                 }
+
                 Console.Write("|");
                 Console.WriteLine();
             }
-            Console.WriteLine("   ---------------------\n");
+
+            Console.WriteLine("   ---------------------");
         }
-        private static char[,] CreateWhiteBoard()
+
+        private static char[,] CreatePlayingField()
         {
             int boardRows = 5;
             int boardColumns = 10;
+
             char[,] board = new char[boardRows, boardColumns];
+
             for (int i = 0; i < boardRows; i++)
             {
                 for (int j = 0; j < boardColumns; j++)
                 {
-                    board[i,j] = '?';
+                    board[i, j] = '?';
                 }
             }
 
             return board;
-
-
-
         }
 
-        private static char[,] CreateBombBoard()
+        private static char[,] PlaceBombsOnField()
         {
-            int boardRows = 5;
-            int boardColumns = 10;
-            char[,] board = new char[boardRows, boardColumns];
+            int bombFieldrows = 5;
+            int bombFieldCols = 10;
 
-            for (int i = 0; i < boardRows; i++)
+            char[,] bombField = new char[bombFieldrows, bombFieldCols];
+
+            for (int i = 0; i < bombFieldrows; i++)
             {
-                for (int j = 0; j < boardColumns; j++)
+                for (int j = 0; j < bombFieldCols; j++)
                 {
-                    board[i, j] = '-';
-
-
-
+                    bombField[i, j] = '-';
                 }
             }
 
-            List<int> randomNumbers = new List<int>();
-            while (randomNumbers.Count < 15)
+            List<int> bombMap = new List<int>();
+
+            while (bombMap.Count < 15)
             {
-                Random random = new Random();
-                int randomNumber = random.Next(50);
-                if (!randomNumbers.Contains(randomNumber))
+                Random randomInteger = new Random();
+                int randomBombLocation = randomInteger.Next(50);
+                if (!bombMap.Contains(randomBombLocation))
                 {
-                    randomNumbers.Add(randomNumber);
+                    bombMap.Add(randomBombLocation);
                 }
             }
 
-            foreach (int number in randomNumbers)
+            foreach (int bombLocation in bombMap)
             {
-                int row = (number / boardColumns);
-                int column = (number % boardColumns);
-                if (column == 0 && number != 0)
+                int bombLocationCol = bombLocation / bombFieldCols;
+                int bombLocationRow = bombLocation % bombFieldCols;
+                if (bombLocationRow == 0 && bombLocation != 0)
                 {
-                    row--;
-                    column = boardColumns;
+                    bombLocationCol--;
+                    bombLocationRow = bombFieldCols;
                 }
-
-
                 else
                 {
-                    column++;
+                    bombLocationRow++;
                 }
-                board[row,column-1] = '*';
+
+                bombField[bombLocationCol, bombLocationRow - 1] = '*';
             }
 
-            return board;
+            return bombField;
         }
 
-        private static void CalculateBombBoard(char[,] board)
+        private static char GetSurroundingBombsCount(char[,] bombField, int row, int col)
         {
-            int boardRows = board.GetLength(0);
-            int boardColumns = board.GetLength(1);
+            int bombsCount = 0;
+            int rowsCount = bombField.GetLength(0);
+            int colsCount = bombField.GetLength(1);
 
-            for (int i = 0; i < boardRows; i++)
+            if (row - 1 >= 0)
             {
-                for (int j = 0; j < boardColumns; j++)
+                if (bombField[row - 1, col] == '*')
                 {
-                    if (board[i,j] != '*')
-                    {
-                        char number = CalculateHowManyBombs(board, i, j);
-                        board[i, j] = number;
-                    }
+                    bombsCount++;
                 }
-
-
             }
+
+            if (row + 1 < rowsCount)
+            {
+                if (bombField[row + 1, col] == '*')
+                {
+                    bombsCount++;
+                }
+            }
+
+            if (col - 1 >= 0)
+            {
+                if (bombField[row, col - 1] == '*')
+                {
+                    bombsCount++;
+                }
+            }
+
+            if (col + 1 < colsCount)
+            {
+                if (bombField[row, col + 1] == '*')
+                {
+                    bombsCount++;
+                }
+            }
+
+            if ((row - 1 >= 0) && (col - 1 >= 0))
+            {
+                if (bombField[row - 1, col - 1] == '*')
+                {
+                    bombsCount++;
+                }
+            }
+
+            if ((row - 1 >= 0) && (col + 1 < colsCount))
+            {
+                if (bombField[row - 1, col + 1] == '*')
+                {
+                    bombsCount++;
+                }
+            }
+
+            if ((row + 1 < rowsCount) && (col - 1 >= 0))
+            {
+                if (bombField[row + 1, col - 1] == '*')
+                {
+                    bombsCount++;
+                }
+            }
+
+            if ((row + 1 < rowsCount) && (col + 1 < colsCount))
+            {
+                if (bombField[row + 1, col + 1] == '*')
+                {
+                    bombsCount++;
+                }
+            }
+
+            return char.Parse(bombsCount.ToString());
         }
-
-        private static char CalculateHowManyBombs(char[,] board, int rowIndex, int columnIndex)
-        {
-            int counted = 0;
-            int boardRows = board.GetLength(0);
-            int boardColumns = board.GetLength(1);
-
-            if (rowIndex - 1 >= 0)
-            {
-                if (board[rowIndex - 1, columnIndex] == '*')
-                { counted++; }
-            }
-            if (rowIndex + 1 < boardRows)
-            {
-                if (board[rowIndex + 1, columnIndex] == '*')
-                { counted++; }
-
-
-
-            }
-            if (columnIndex - 1 >= 0)
-            {
-                if (board[rowIndex, columnIndex - 1] == '*')
-                { counted++; }
-            }
-            if (columnIndex + 1 < boardColumns)
-            {
-                if (board[rowIndex, columnIndex + 1] == '*')
-                { counted++; }
-            }
-            if ((rowIndex - 1 >= 0) && (columnIndex - 1 >= 0))
-            {
-                if (board[rowIndex - 1, columnIndex - 1] == '*')
-                { counted++; }
-            }
-            if ((rowIndex - 1 >= 0) && (columnIndex + 1 < boardColumns))
-            {
-                if (board[rowIndex - 1, columnIndex + 1] == '*')
-                { counted++; }
-            }
-            if ((rowIndex + 1 < boardRows) && (columnIndex - 1 >= 0))
-            {
-                if (board[rowIndex + 1, columnIndex - 1] == '*')
-                { counted++; }
-            }
-            if ((rowIndex + 1 < boardRows) && (columnIndex + 1 < boardColumns))
-            {
-                if (board[rowIndex + 1, columnIndex + 1] == '*')
-                { counted++; }
-
-
-            }
-            return char.Parse(counted.ToString());
-        }
-
     }
 }
