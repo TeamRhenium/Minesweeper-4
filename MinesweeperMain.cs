@@ -29,6 +29,7 @@
 
             do
             {
+                //in Draw.cs -> Rules()
                 if (isNewGame)
                 {
                     Console.WriteLine("Let's play some Minesweeper! ");
@@ -61,6 +62,7 @@
                     }
                 }
 
+                //in Engine.cs -> ExecuteGameCommands()
                 switch (inputCommand)
                 {
                     case "top":
