@@ -71,7 +71,7 @@
     <Compile Include="Engine.cs" />
     <Compile Include="MinesweeperMain.cs" />
     <Compile Include="Player.cs" />
-    <Compile Include="PlayingField.cs" />
+    <Compile Include="GameField.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />
