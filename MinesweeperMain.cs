@@ -40,7 +40,7 @@
                 Console.Write("Enter row and column : ");
                 inputCommand = Console.ReadLine().Trim();
 
-                if (inputCommand.Length >= 3)
+                if (inputCommand.Length == 3)
                 {
                     if (int.TryParse(inputCommand[0].ToString(), out row) &&
                         int.TryParse(inputCommand[2].ToString(), out col) &&
