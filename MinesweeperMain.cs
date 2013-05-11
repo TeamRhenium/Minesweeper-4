@@ -10,8 +10,8 @@
         {
             string inputCommand = string.Empty;
 
-            char[,] playingField = CreatePlayingField();
-            char[,] bombsField = PlaceBombsOnField();
+            char[,] playingField = PlayingField.Create();
+            char[,] bombsField = PlayingField.PlaceBombs();
 
             int personalScore = 0;
 
@@ -32,20 +32,7 @@
                 //in Draw.cs -> Rules()
                 if (isNewGame)
                 {
-                    Console.WriteLine("Let's play some Minesweeper! ");
-                    Console.WriteLine("Find the cells without bombsField. If you hit a bomb the game ends.");
-                    Console.WriteLine("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-                    Console.WriteLine("Menu:");
-                    Console.WriteLine("'top' - show the score board");
-                    Console.WriteLine("'restart' - start a new game");
-                    Console.WriteLine("'exit' - exit the game");
-                    Console.WriteLine("'4x7' - example for entering row and col");
-                    Console.WriteLine("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-                    Console.WriteLine();
-
-                    DrawPlayingField(playingField);
-
-                    isNewGame = false;
+                   isNewGame = Draw.GameLoad(playingField);
                 }
 
                 Console.Write("Enter row and column : ");
@@ -69,11 +56,11 @@
                         ShowScoreBoard(scoreBoardTopPlayers);
                         break;
                     case "restart":
-                        playingField = CreatePlayingField();
+                        playingField = PlayingField.Create();
 
-                        bombsField = PlaceBombsOnField();
+                        bombsField = PlayingField.PlaceBombs();
 
-                        DrawPlayingField(playingField);
+                        Draw.PlayingField(playingField);
 
                         isBombHit = false;
                         isNewGame = false;
@@ -96,7 +83,7 @@
                             }
                             else
                             {
-                                DrawPlayingField(playingField);
+                                Draw.PlayingField(playingField);
                             }
                         }
                         else
@@ -112,7 +99,7 @@
 
                 if (isBombHit)
                 {
-                    DrawPlayingField(bombsField);
+                    Draw.PlayingField(bombsField);
                     Console.WriteLine("You just hit a bomb. Sorry.");
                     Console.WriteLine("Enter your nickname for the score board: ", personalScore);
                     string nickname = Console.ReadLine();
@@ -138,8 +125,8 @@
                     scoreBoardTopPlayers.Sort((Player firstPlayer, Player secondPlayer) => secondPlayer.PlayerPoints.CompareTo(firstPlayer.PlayerPoints));
                     ShowScoreBoard(scoreBoardTopPlayers);
 
-                    playingField = CreatePlayingField();
-                    bombsField = PlaceBombsOnField();
+                    playingField = PlayingField.Create();
+                    bombsField = PlayingField.PlaceBombs();
 
                     personalScore = 0;
 
@@ -151,7 +138,7 @@
                 {
                     Console.WriteLine("Congrats! You won the game!");
 
-                    DrawPlayingField(bombsField);
+                    Draw.PlayingField(bombsField);
 
                     Console.WriteLine("Enter your nickname for the score board: ");
                     string playerNickname = Console.ReadLine();
@@ -160,8 +147,8 @@
                     scoreBoardTopPlayers.Add(playerCurrentScore);
                     ShowScoreBoard(scoreBoardTopPlayers);
 
-                    playingField = CreatePlayingField();
-                    bombsField = PlaceBombsOnField();
+                    playingField = PlayingField.Create();
+                    bombsField = PlayingField.PlaceBombs();
                     personalScore = 0;
 
                     isWon = false;
@@ -198,95 +185,6 @@
             char surroundingBombs = GetSurroundingBombsCount(allBombs, bombFieldRow, bombFieldCol);
             allBombs[bombFieldRow, bombFieldCol] = surroundingBombs;
             bombsField[bombFieldRow, bombFieldCol] = surroundingBombs;
-        }
-
-        private static void DrawPlayingField(char[,] board)
-        {
-            int playingFieldRows = board.GetLength(0);
-            int playingFieldCols = board.GetLength(1);
-
-            Console.WriteLine("    0 1 2 3 4 5 6 7 8 9");
-            Console.WriteLine("   ---------------------");
-
-            for (int i = 0; i < playingFieldRows; i++)
-            {
-                Console.Write("{0} | ", i);
-
-                for (int j = 0; j < playingFieldCols; j++)
-                {
-                    Console.Write(string.Format("{0} ", board[i, j]));
-                }
-
-                Console.Write("|");
-                Console.WriteLine();
-            }
-
-            Console.WriteLine("   ---------------------");
-        }
-
-        private static char[,] CreatePlayingField()
-        {
-            int boardRows = 5;
-            int boardColumns = 10;
-
-            char[,] board = new char[boardRows, boardColumns];
-
-            for (int i = 0; i < boardRows; i++)
-            {
-                for (int j = 0; j < boardColumns; j++)
-                {
-                    board[i, j] = '?';
-                }
-            }
-
-            return board;
-        }
-
-        private static char[,] PlaceBombsOnField()
-        {
-            int bombFieldrows = 5;
-            int bombFieldCols = 10;
-
-            char[,] bombField = new char[bombFieldrows, bombFieldCols];
-
-            for (int i = 0; i < bombFieldrows; i++)
-            {
-                for (int j = 0; j < bombFieldCols; j++)
-                {
-                    bombField[i, j] = '-';
-                }
-            }
-
-            List<int> bombMap = new List<int>();
-
-            while (bombMap.Count < 15)
-            {
-                Random randomInteger = new Random();
-                int randomBombLocation = randomInteger.Next(50);
-                if (!bombMap.Contains(randomBombLocation))
-                {
-                    bombMap.Add(randomBombLocation);
-                }
-            }
-
-            foreach (int bombLocation in bombMap)
-            {
-                int bombLocationCol = bombLocation / bombFieldCols;
-                int bombLocationRow = bombLocation % bombFieldCols;
-                if (bombLocationRow == 0 && bombLocation != 0)
-                {
-                    bombLocationCol--;
-                    bombLocationRow = bombFieldCols;
-                }
-                else
-                {
-                    bombLocationRow++;
-                }
-
-                bombField[bombLocationCol, bombLocationRow - 1] = '*';
-            }
-
-            return bombField;
         }
 
         private static char GetSurroundingBombsCount(char[,] bombField, int row, int col)
