@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Minesweeper
 {
-    public static class PlayingField
+    public static class GameField
     {
 
         public static char[,] Create()

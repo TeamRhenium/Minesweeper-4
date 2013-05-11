@@ -10,8 +10,8 @@
         {
             string inputCommand = string.Empty;
 
-            char[,] playingField = PlayingField.Create();
-            char[,] bombsField = PlayingField.PlaceBombs();
+            char[,] playingField = GameField.Create();
+            char[,] bombsField = GameField.PlaceBombs();
 
             int personalScore = 0;
 
@@ -56,9 +56,9 @@
                         ShowScoreBoard(scoreBoardTopPlayers);
                         break;
                     case "restart":
-                        playingField = PlayingField.Create();
+                        playingField = GameField.Create();
 
-                        bombsField = PlayingField.PlaceBombs();
+                        bombsField = GameField.PlaceBombs();
 
                         Draw.PlayingField(playingField);
 
@@ -125,8 +125,8 @@
                     scoreBoardTopPlayers.Sort((Player firstPlayer, Player secondPlayer) => secondPlayer.PlayerPoints.CompareTo(firstPlayer.PlayerPoints));
                     ShowScoreBoard(scoreBoardTopPlayers);
 
-                    playingField = PlayingField.Create();
-                    bombsField = PlayingField.PlaceBombs();
+                    playingField = GameField.Create();
+                    bombsField = GameField.PlaceBombs();
 
                     personalScore = 0;
 
@@ -147,8 +147,8 @@
                     scoreBoardTopPlayers.Add(playerCurrentScore);
                     ShowScoreBoard(scoreBoardTopPlayers);
 
-                    playingField = PlayingField.Create();
-                    bombsField = PlayingField.PlaceBombs();
+                    playingField = GameField.Create();
+                    bombsField = GameField.PlaceBombs();
                     personalScore = 0;
 
                     isWon = false;
