@@ -5,19 +5,49 @@ using System.Text;
 
 namespace Minesweeper
 {
-    public static class GameField
+    public class GameField
     {
+        private readonly int fieldRows;
+        private readonly int fieldCols;
 
-        public static char[,] Create()
+        public GameField(int fieldRows, int fieldCols)
         {
-            int boardRows = 5;
-            int boardColumns = 10;
-
-            char[,] board = new char[boardRows, boardColumns];
-
-            for (int i = 0; i < boardRows; i++)
+            if (fieldRows <= 0)
             {
-                for (int j = 0; j < boardColumns; j++)
+                throw new ArgumentOutOfRangeException("The rows must be 1 or more.");
+            }
+            if (fieldCols <= 0)
+            {
+                throw new ArgumentOutOfRangeException("The cols must be 1 or more.");
+            }
+
+            this.fieldRows = fieldRows;
+            this.fieldCols = fieldCols;
+        }
+
+        public int FieldRows
+        {
+            get
+            {
+                return this.fieldRows;
+            }
+        }
+
+        public int FieldCols
+        {
+            get
+            {
+                return this.fieldCols;
+            }
+        }
+
+        public char[,] Create()
+        {
+            char[,] board = new char[this.fieldRows, this.fieldCols];
+
+            for (int i = 0; i < this.fieldRows; i++)
+            {
+                for (int j = 0; j < this.fieldCols; j++)
                 {
                     board[i, j] = '?';
                 }
@@ -26,41 +56,43 @@ namespace Minesweeper
             return board;
         }
 
-        public static char[,] PlaceBombs()
+        public char[,] PlaceBombs()
         {
-            int bombFieldrows = 5;
-            int bombFieldCols = 10;
+            char[,] bombField = new char[this.fieldRows, this.fieldCols];
 
-            char[,] bombField = new char[bombFieldrows, bombFieldCols];
+            int totalCellsCount = fieldCols * fieldRows;
+            int totalBombsCount = fieldCols + fieldRows;
 
-            for (int i = 0; i < bombFieldrows; i++)
+            for (int i = 0; i < this.fieldRows; i++)
             {
-                for (int j = 0; j < bombFieldCols; j++)
+                for (int j = 0; j < this.fieldCols; j++)
                 {
                     bombField[i, j] = '-';
                 }
             }
 
-            List<int> bombMap = new List<int>();
+            List<int> bombsMap = new List<int>();
 
-            while (bombMap.Count < 15)
+            while (bombsMap.Count < totalBombsCount)
             {
                 Random randomInteger = new Random();
-                int randomBombLocation = randomInteger.Next(50);
-                if (!bombMap.Contains(randomBombLocation))
+                int randomBombLocation = randomInteger.Next(totalCellsCount);
+
+                if (!bombsMap.Contains(randomBombLocation))
                 {
-                    bombMap.Add(randomBombLocation);
+                    bombsMap.Add(randomBombLocation);
                 }
             }
 
-            foreach (int bombLocation in bombMap)
+            foreach (int bombLocation in bombsMap)
             {
-                int bombLocationCol = bombLocation / bombFieldCols;
-                int bombLocationRow = bombLocation % bombFieldCols;
+                int bombLocationCol = bombLocation / this.fieldCols;
+                int bombLocationRow = bombLocation % this.fieldCols;
+
                 if (bombLocationRow == 0 && bombLocation != 0)
                 {
                     bombLocationCol--;
-                    bombLocationRow = bombFieldCols;
+                    bombLocationRow = this.fieldCols;
                 }
                 else
                 {

@@ -10,8 +10,10 @@
         {
             string inputCommand = string.Empty;
 
-            char[,] playingField = GameField.Create();
-            char[,] bombsField = GameField.PlaceBombs();
+            GameField gameField = new GameField(10,10);
+
+            char[,] playingField = gameField.Create();
+            char[,] bombsField = gameField.PlaceBombs();
 
             int personalScore = 0;
 
@@ -25,11 +27,11 @@
             bool isNewGame = true;
             bool isWon = false;
 
-            const int MaxScore = 35;
+            int maxScore = (gameField.FieldCols * gameField.FieldCols) -
+                           (gameField.FieldCols + gameField.FieldCols);
 
             do
             {
-                //in Draw.cs -> Rules()
                 if (isNewGame)
                 {
                    isNewGame = Draw.GameLoad(playingField);
@@ -49,16 +51,15 @@
                     }
                 }
 
-                //in Engine.cs -> ExecuteGameCommands()
                 switch (inputCommand)
                 {
                     case "top":
                         ShowScoreBoard(scoreBoardTopPlayers);
                         break;
                     case "restart":
-                        playingField = GameField.Create();
+                        playingField = gameField.Create();
 
-                        bombsField = GameField.PlaceBombs();
+                        bombsField = gameField.PlaceBombs();
 
                         Draw.PlayingField(playingField);
 
@@ -77,7 +78,7 @@
                                 personalScore++;
                             }
 
-                            if (MaxScore == personalScore)
+                            if (maxScore == personalScore)
                             {
                                 isWon = true;
                             }
@@ -100,10 +101,13 @@
                 if (isBombHit)
                 {
                     Draw.PlayingField(bombsField);
+
                     Console.WriteLine("You just hit a bomb. Sorry.");
                     Console.WriteLine("Enter your nickname for the score board: ", personalScore);
+
                     string nickname = Console.ReadLine();
                     Player playerPersonalScore = new Player(nickname, personalScore);
+
                     if (scoreBoardTopPlayers.Count < 5)
                     {
                         scoreBoardTopPlayers.Add(playerPersonalScore);
@@ -125,8 +129,8 @@
                     scoreBoardTopPlayers.Sort((Player firstPlayer, Player secondPlayer) => secondPlayer.PlayerPoints.CompareTo(firstPlayer.PlayerPoints));
                     ShowScoreBoard(scoreBoardTopPlayers);
 
-                    playingField = GameField.Create();
-                    bombsField = GameField.PlaceBombs();
+                    playingField = gameField.Create();
+                    bombsField = gameField.PlaceBombs();
 
                     personalScore = 0;
 
@@ -147,8 +151,8 @@
                     scoreBoardTopPlayers.Add(playerCurrentScore);
                     ShowScoreBoard(scoreBoardTopPlayers);
 
-                    playingField = GameField.Create();
-                    bombsField = GameField.PlaceBombs();
+                    playingField = gameField.Create();
+                    bombsField = gameField.PlaceBombs();
                     personalScore = 0;
 
                     isWon = false;
