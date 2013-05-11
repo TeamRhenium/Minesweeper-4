@@ -2,16 +2,16 @@
 {
     using System;
 
-    public class Score
+    public class Player
     {
         private string playerName;
         private int playerPoints;
 
-        public Score()
+        public Player()
         {
         }
 
-        public Score(string playerName, int playerPoints)
+        public Player(string playerName, int playerPoints)
         {
             this.PlayerName = playerName;
             this.PlayerPoints = playerPoints;

@@ -17,7 +17,7 @@
 
             bool isBombHit = false;
 
-            List<Score> scoreBoardTopPlayers = new List<Score>(6);
+            List<Player> scoreBoardTopPlayers = new List<Player>(6);
 
             int row = 0;
             int col = 0;
@@ -114,7 +114,7 @@
                     Console.WriteLine("You just hit a bomb. Sorry.");
                     Console.WriteLine("Enter your nickname for the score board: ", personalScore);
                     string nickname = Console.ReadLine();
-                    Score playerPersonalScore = new Score(nickname, personalScore);
+                    Player playerPersonalScore = new Player(nickname, personalScore);
                     if (scoreBoardTopPlayers.Count < 5)
                     {
                         scoreBoardTopPlayers.Add(playerPersonalScore);
@@ -132,8 +132,8 @@
                         }
                     }
 
-                    scoreBoardTopPlayers.Sort((Score firstPlayer, Score secondPlayer) => secondPlayer.PlayerName.CompareTo(firstPlayer.PlayerName));
-                    scoreBoardTopPlayers.Sort((Score firstPlayer, Score secondPlayer) => secondPlayer.PlayerPoints.CompareTo(firstPlayer.PlayerPoints));
+                    scoreBoardTopPlayers.Sort((Player firstPlayer, Player secondPlayer) => secondPlayer.PlayerName.CompareTo(firstPlayer.PlayerName));
+                    scoreBoardTopPlayers.Sort((Player firstPlayer, Player secondPlayer) => secondPlayer.PlayerPoints.CompareTo(firstPlayer.PlayerPoints));
                     ShowScoreBoard(scoreBoardTopPlayers);
 
                     playingField = CreatePlayingField();
@@ -154,7 +154,7 @@
                     Console.WriteLine("Enter your nickname for the score board: ");
                     string playerNickname = Console.ReadLine();
 
-                    Score playerCurrentScore = new Score(playerNickname, personalScore);
+                    Player playerCurrentScore = new Player(playerNickname, personalScore);
                     scoreBoardTopPlayers.Add(playerCurrentScore);
                     ShowScoreBoard(scoreBoardTopPlayers);
 
@@ -172,7 +172,7 @@
             Console.Read();
         }
 
-        private static void ShowScoreBoard(List<Score> allScores)
+        private static void ShowScoreBoard(List<Player> allScores)
         {
             Console.WriteLine("Points:");
 
