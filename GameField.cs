@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Minesweeper
+﻿namespace Minesweeper
 {
+    using System;
+    using System.Collections.Generic;
+
     public class GameField
     {
         private readonly int fieldRows;
@@ -12,13 +10,13 @@ namespace Minesweeper
 
         public GameField(int fieldRows, int fieldCols)
         {
-            if (fieldRows <= 0)
+            if (fieldRows <= 0 || fieldRows > 10)
             {
-                throw new ArgumentOutOfRangeException("The rows must be 1 or more.");
+                throw new ArgumentOutOfRangeException("The rows must be between 1 and 10.");
             }
-            if (fieldCols <= 0)
+            if (fieldCols <= 0 || fieldCols > 10)
             {
-                throw new ArgumentOutOfRangeException("The cols must be 1 or more.");
+                throw new ArgumentOutOfRangeException("The cols must be between 1 and 10.");
             }
 
             this.fieldRows = fieldRows;

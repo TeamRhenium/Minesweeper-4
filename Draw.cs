@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Minesweeper
+﻿namespace Minesweeper
 {
+    using System;
+    using System.Collections.Generic;
+
     public static class Draw
     {
 
@@ -51,5 +49,23 @@ namespace Minesweeper
             Console.WriteLine("   ---------------------");
         }
 
+        public static void ScoreBoard(List<Player> allScores)
+        {
+            Console.WriteLine("Points:");
+
+            if (allScores.Count > 0)
+            {
+                for (int i = 0; i < allScores.Count; i++)
+                {
+                    Console.WriteLine("{0}. {1} --> {2} points", i + 1, allScores[i].PlayerName, allScores[i].PlayerPoints);
+                }
+
+                Console.WriteLine();
+            }
+            else
+            {
+                Console.WriteLine("Empty score board.");
+            }
+        }
     }
 }

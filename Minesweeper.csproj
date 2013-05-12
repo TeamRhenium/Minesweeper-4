@@ -69,7 +69,7 @@
   <ItemGroup>
     <Compile Include="Draw.cs" />
     <Compile Include="Engine.cs" />
-    <Compile Include="MinesweeperMain.cs" />
+    <Compile Include="MinesweeperDemo.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="GameField.cs" />
   </ItemGroup>
