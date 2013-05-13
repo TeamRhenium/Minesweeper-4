@@ -20,13 +20,33 @@
         public string PlayerName
         {
             get { return this.playerName; }
-            set { this.playerName = value; }
+            set
+            {
+                if (string.IsNullOrEmpty(value))
+                {
+                    throw new ArgumentException("Player's name must not be empty!");
+                }
+                else
+                {
+                    this.playerName = value;
+                }
+            }
         }
 
         public int PlayerPoints
         {
             get { return this.playerPoints; }
-            set { this.playerPoints = value; }
+            set
+            {
+                if (value < 0)
+                {
+                    throw new ArgumentException("Player's score must not be negative value!");
+                }
+                else
+                {
+                    this.playerPoints = value;
+                }
+            }
         }
 
         public void AddScore(Player playerPersonalScore)
