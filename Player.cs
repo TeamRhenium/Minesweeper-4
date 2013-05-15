@@ -1,4 +1,7 @@
-﻿namespace Minesweeper
+﻿// <copyright file="Player.cs" company="Telerik Academy">
+// Telerik Academy - High Quality Code Team Project. Team Rhenium.
+// </copyright>
+namespace Minesweeper
 {
     using System;
 

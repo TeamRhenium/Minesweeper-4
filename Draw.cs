@@ -1,4 +1,7 @@
-﻿namespace Minesweeper
+﻿// <copyright file="Draw.cs" company="Telerik Academy">
+// Telerik Academy - High Quality Code Team Project. Team Rhenium.
+// </copyright>
+namespace Minesweeper
 {
     using System;
     using System.Collections.Generic;
@@ -6,7 +9,7 @@
     public static class Draw
     {
 
-        public static bool GameLoad(char[,] board)
+        public static void GameLoad(char[,] board)
         {
             Console.WriteLine("Let's play some Minesweeper! ");
             Console.WriteLine("Find the cells without bombsField. If you hit a bomb the game ends.");
@@ -20,8 +23,6 @@
             Console.WriteLine();
 
             PlayingField(board);
-
-            return false;
         }
 
 

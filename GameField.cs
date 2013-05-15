@@ -1,4 +1,7 @@
-﻿namespace Minesweeper
+﻿// <copyright file="GameField.cs" company="Telerik Academy">
+// Telerik Academy - High Quality Code Team Project. Team Rhenium.
+// </copyright>
+namespace Minesweeper
 {
     using System;
     using System.Collections.Generic;

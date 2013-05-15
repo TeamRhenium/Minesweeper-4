@@ -1,12 +1,18 @@
-﻿namespace Minesweeper
+﻿// <copyright file="Engine.cs" company="Telerik Academy">
+// Telerik Academy - High Quality Code Team Project. Team Rhenium.
+// </copyright>
+namespace Minesweeper
 {
     using System;
     using System.Linq;
     using System.Collections.Generic;
 
+    /// <summary>
+    /// Initializes a new instance of the <seealso cref="Engine"/> class.
+    /// </summary>
     public class Engine
     {
-        public static List<Player> ScoreBoardTopPlayers = new List<Player>(6);
+        public static List<Player> ScoreBoardTopPlayers = new List<Player>();
         public static bool IsNewGame = true;
 
         private int personalScore = 0;
@@ -14,17 +20,23 @@
         private int rowToCheckForBomb;
         private int colToCheckForBomb;
 
+        /// <summary>
+        /// Parses and returns the input command.
+        /// </summary>
+        /// <param name="inputCommand">The command to parse.</param>
+        /// <param name="fieldWithQuestionmarks">The field to validate before the command is parsed.</param>
+        /// <returns>Returns the parsed input command.</returns>
         public string ParseInputCommand(string inputCommand, char[,] fieldWithQuestionmarks)
         {
-            Console.Write("Enter row and column : ");
+            Console.Write("Enter row and column: ");
             inputCommand = Console.ReadLine().Trim();
 
             if (inputCommand.Length == 3)
             {
-                if (int.TryParse(inputCommand[0].ToString(), out rowToCheckForBomb) &&
-                    int.TryParse(inputCommand[2].ToString(), out colToCheckForBomb) &&
-                    rowToCheckForBomb <= fieldWithQuestionmarks.GetLength(0) &&
-                    colToCheckForBomb <= fieldWithQuestionmarks.GetLength(1))
+                if (int.TryParse(inputCommand[0].ToString(), out this.rowToCheckForBomb) &&
+                    int.TryParse(inputCommand[2].ToString(), out this.colToCheckForBomb) &&
+                    this.rowToCheckForBomb <= fieldWithQuestionmarks.GetLength(0) &&
+                    this.colToCheckForBomb <= fieldWithQuestionmarks.GetLength(1))
                 {
                     inputCommand = "turn";
                 }
@@ -33,6 +45,16 @@
             return inputCommand;
         }
 
+        /// <summary>
+        /// Executes a parsed command.
+        /// </summary>
+        /// <param name="inputCommand">The parsed command to execute.</param>
+        /// <param name="gameField">The game field dimensions.</param>
+        /// <param name="fieldWithQuestionmarks">The unrevealed game field.(with question marks)</param>
+        /// <param name="fieldWithBombs">The bombs field.(the places of the bombs)</param>
+        /// <param name="maxScore">The max score formula.
+        ///     Calculated by the formula (gameField.FieldCols * gameField.FieldCols) - (gameField.FieldCols + gameField.FieldCols)
+        /// </param>
         public void ExecuteCommand(string inputCommand, GameField gameField, char[,] fieldWithQuestionmarks, char[,] fieldWithBombs, int maxScore) 
         {
             switch (inputCommand)
@@ -55,26 +77,26 @@
                     break;
 
                 case "turn":
-                    if (fieldWithBombs[rowToCheckForBomb, colToCheckForBomb] != '*')
+                    if (fieldWithBombs[this.rowToCheckForBomb, this.colToCheckForBomb] != '*')
                     {
                         IsNewGame = false;
-                        SetSurroundingBombsCount(fieldWithQuestionmarks, fieldWithBombs, rowToCheckForBomb, colToCheckForBomb);
-                        personalScore++;
+                        this.SetSurroundingBombsCount(fieldWithQuestionmarks, fieldWithBombs, this.rowToCheckForBomb, this.colToCheckForBomb);
+                        this.personalScore++;
 
-                        if (maxScore == personalScore)
+                        if (maxScore == this.personalScore)
                         {
                             Console.WriteLine("Congrats! You won the game!");
 
                             Draw.PlayingField(fieldWithBombs);
 
-                            EnterScoreToScoreBoard();
+                            this.EnterScoreToScoreBoard();
 
                             Draw.ScoreBoard(ScoreBoardTopPlayers);
 
                             fieldWithQuestionmarks = gameField.Create();
                             fieldWithBombs = gameField.PlaceBombs();
 
-                            personalScore = 0;
+                            this.personalScore = 0;
 
                             IsNewGame = true;
                         }
@@ -96,10 +118,11 @@
                         fieldWithQuestionmarks = gameField.Create();
                         fieldWithBombs = gameField.PlaceBombs();
 
-                        personalScore = 0;
+                        this.personalScore = 0;
 
                         IsNewGame = true;
                     }
+
                     break;
 
                 default:
@@ -108,13 +131,27 @@
             }
         }
 
-        private void SetSurroundingBombsCount(char[,] fieldWithBombs, char[,] allBombs, int bombFieldRow, int bombFieldCol)
+        /// <summary>
+        /// Sets the number of the surrounding bombs near a non-bomb cell which is picked.
+        /// </summary>
+        /// <param name="fieldWithQuestionmarks">The unrevealed game field.(with question marks)</param>
+        /// <param name="fieldWithBombs">The bombs field.(the places of the bombs)</param>
+        /// <param name="bombFieldRow">The current row to set the number.</param>
+        /// <param name="bombFieldCol">The current column to set the number.</param>
+        private void SetSurroundingBombsCount(char[,] fieldWithQuestionmarks, char[,] fieldWithBombs, int bombFieldRow, int bombFieldCol)
         {
-            char surroundingBombs = GetSurroundingBombsCount(allBombs, bombFieldRow, bombFieldCol);
-            allBombs[bombFieldRow, bombFieldCol] = surroundingBombs;
+            char surroundingBombs = this.GetSurroundingBombsCount(fieldWithBombs, bombFieldRow, bombFieldCol);
             fieldWithBombs[bombFieldRow, bombFieldCol] = surroundingBombs;
+            fieldWithQuestionmarks[bombFieldRow, bombFieldCol] = surroundingBombs;
         }
 
+        /// <summary>
+        /// Gets the number of the surrounding bombs.
+        /// </summary>
+        /// <param name="bombField">The field with placed bombs.</param>
+        /// <param name="row">The current row to get the number.</param>
+        /// <param name="col">The current column to get the number.</param>
+        /// <returns>The number of surrounding bombs near the cell.</returns>
         private char GetSurroundingBombsCount(char[,] bombField, int row, int col)
         {
             int bombsCount = 0;
@@ -188,15 +225,18 @@
             return char.Parse(bombsCount.ToString());
         }
 
+        /// <summary>
+        /// Enter the score to the scoreboard when a round is finished.
+        /// </summary>
         private void EnterScoreToScoreBoard()
         {
             Console.WriteLine("Enter your nickname for the score board: ");
             string playerNickname = Console.ReadLine();
-            Player playerCurrentScore = new Player(playerNickname, personalScore);
+            Player playerCurrentScore = new Player(playerNickname, this.personalScore);
 
             ScoreBoardTopPlayers.Add(playerCurrentScore);
 
-            personalScore = 0;
+            this.personalScore = 0;
 
             IsNewGame = true;
         }
