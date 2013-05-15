@@ -15,7 +15,7 @@ namespace Minesweeper
         private readonly int fieldCols;
 
         /// <summary>
-        /// The GameField class constructor.
+        /// GameField class constructor.
         /// </summary>
         /// <param name="fieldRows">Game's field number of rows given as parameter.</param>
         /// <param name="fieldCols">Game's field number of columns given as parameter.</param>
@@ -35,7 +35,7 @@ namespace Minesweeper
         }
 
         /// <summary>
-        /// GameField's property. Returns the number of game's field rows.
+        /// GameField class property. Returns the number of game's field rows.
         /// </summary>
         public int FieldRows
         {
@@ -46,7 +46,7 @@ namespace Minesweeper
         }
 
         /// <summary>
-        /// GameField's property. Returns the number of game's field columns.
+        /// GameField class property. Returns the number of game's field columns.
         /// </summary>
         public int FieldCols
         {
