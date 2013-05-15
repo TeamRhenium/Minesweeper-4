@@ -9,8 +9,6 @@ namespace Minesweeper
     {
          public static void Main(string[] args)
         {
-            string inputCommand = string.Empty;
-
             GameField gameField = new GameField(10,10);
 
             char[,] playingField = gameField.Create();
@@ -21,7 +19,7 @@ namespace Minesweeper
 
             Engine engine = new Engine();
 
-            do
+            while (true)
             {
                 if (Engine.IsNewGame)
                 {
@@ -31,12 +29,18 @@ namespace Minesweeper
                     Draw.GameLoad(playingField);
                 }
 
+                Console.Write("Enter row and column: ");
+                string inputCommand = Console.ReadLine();
+
+                if (inputCommand == "exit")
+                {
+                    break;
+                }
+
                 inputCommand = engine.ParseInputCommand(inputCommand, playingField);
 
                 engine.ExecuteCommand(inputCommand, gameField, playingField, bombsField, maxScore);
-
-            }
-            while (inputCommand != "exit");
+            }            
 
             Console.WriteLine("Press any key to exit the game.");
             Console.Read();

@@ -28,21 +28,21 @@ namespace Minesweeper
         /// <returns>Returns the parsed input command.</returns>
         public string ParseInputCommand(string inputCommand, char[,] fieldWithQuestionmarks)
         {
-            Console.Write("Enter row and column: ");
-            inputCommand = Console.ReadLine().Trim();
+            string command = inputCommand.Trim();
 
-            if (inputCommand.Length == 3)
+            if (command.Length == 3)
             {
-                if (int.TryParse(inputCommand[0].ToString(), out this.rowToCheckForBomb) &&
-                    int.TryParse(inputCommand[2].ToString(), out this.colToCheckForBomb) &&
+                if (int.TryParse(command[0].ToString(), out this.rowToCheckForBomb) &&
+                    int.TryParse(command[2].ToString(), out this.colToCheckForBomb) &&
                     this.rowToCheckForBomb <= fieldWithQuestionmarks.GetLength(0) &&
-                    this.colToCheckForBomb <= fieldWithQuestionmarks.GetLength(1))
+                    this.colToCheckForBomb <= fieldWithQuestionmarks.GetLength(1) &&
+                    command[1] == ' ')
                 {
-                    inputCommand = "turn";
+                    command = "turn";
                 }
             }
 
-            return inputCommand;
+            return command;
         }
 
         /// <summary>
@@ -126,7 +126,7 @@ namespace Minesweeper
                     break;
 
                 default:
-                    Console.WriteLine("Wrong command.");
+                    Console.WriteLine("Wrong command: {0}", inputCommand);
                     break;
             }
         }
