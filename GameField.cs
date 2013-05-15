@@ -6,11 +6,19 @@ namespace Minesweeper
     using System;
     using System.Collections.Generic;
 
+    /// <summary>
+    /// Initializes a new instance of the <seealso cref="GameField"/> class.
+    /// </summary>
     public class GameField
     {
         private readonly int fieldRows;
         private readonly int fieldCols;
 
+        /// <summary>
+        /// The GameField class constructor.
+        /// </summary>
+        /// <param name="fieldRows">Game's field number of rows given as parameter.</param>
+        /// <param name="fieldCols">Game's field number of columns given as parameter.</param>
         public GameField(int fieldRows, int fieldCols)
         {
             if (fieldRows <= 0 || fieldRows > 10)
@@ -26,6 +34,9 @@ namespace Minesweeper
             this.fieldCols = fieldCols;
         }
 
+        /// <summary>
+        /// GameField's property. Returns the number of game's field rows.
+        /// </summary>
         public int FieldRows
         {
             get
@@ -34,6 +45,9 @@ namespace Minesweeper
             }
         }
 
+        /// <summary>
+        /// GameField's property. Returns the number of game's field columns.
+        /// </summary>
         public int FieldCols
         {
             get
@@ -42,6 +56,10 @@ namespace Minesweeper
             }
         }
 
+        /// <summary>
+        /// Creates new game field depending on it's number of rows and columns.
+        /// </summary>
+        /// <returns>Returns game field</returns>
         public char[,] Create()
         {
             char[,] board = new char[this.fieldRows, this.fieldCols];
@@ -57,6 +75,12 @@ namespace Minesweeper
             return board;
         }
 
+
+        /// <summary>
+        /// Places bombs on the game field. The number of bombs is equal to the sum of game's field number of rows and columns.
+        /// The bombs are placed randomly on the game field.
+        /// </summary>
+        /// <returns>Returns a game field with bombs placed on it.</returns>
         public char[,] PlaceBombs()
         {
             char[,] bombField = new char[this.fieldRows, this.fieldCols];
