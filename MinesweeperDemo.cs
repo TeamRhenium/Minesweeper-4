@@ -5,6 +5,9 @@ namespace Minesweeper
 {
     using System;
 
+    /// <summary>
+    /// The entry point of the game. 
+    /// </summary>
     public class MinesweeperDemo
     {
          public static void Main(string[] args)
@@ -18,7 +21,7 @@ namespace Minesweeper
                            (gameField.FieldCols + gameField.FieldCols);
 
             Engine engine = new Engine();
-
+            
             while (true)
             {
                 if (Engine.IsNewGame)
