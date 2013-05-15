@@ -6,10 +6,16 @@ namespace Minesweeper
     using System;
     using System.Collections.Generic;
 
+    /// <summary>
+    /// Draws game's console.
+    /// </summary>
     public static class Draw
     {
 
-        public static void GameLoad(char[,] board)
+       /// <summary>
+       /// Draws the game's rules and commands.
+       /// </summary>
+        public static void GameLoad()
         {
             Console.WriteLine("Let's play some Minesweeper! ");
             Console.WriteLine("Find the cells without bombsField. If you hit a bomb the game ends.");
@@ -21,11 +27,12 @@ namespace Minesweeper
             Console.WriteLine("'4x7' - example for entering row and col");
             Console.WriteLine("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
             Console.WriteLine();
-
-            PlayingField(board);
         }
 
-
+        /// <summary>
+        /// Draws the game's playing field.
+        /// </summary>
+        /// <param name="board">The playing field to be drawn on the console.</param>
         public static void PlayingField(char[,] board)
         {
             int playingFieldRows = board.GetLength(0);
@@ -50,15 +57,19 @@ namespace Minesweeper
             Console.WriteLine("   ---------------------");
         }
 
-        public static void ScoreBoard(List<Player> allScores)
+        /// <summary>
+        /// Draws the game's score board.
+        /// </summary>
+        /// <param name="players">List with players. Each player has name and scores</param>
+        public static void ScoreBoard(List<Player> players)
         {
             Console.WriteLine("Points:");
 
-            if (allScores.Count > 0)
+            if (players.Count > 0)
             {
-                for (int i = 0; i < allScores.Count; i++)
+                for (int i = 0; i < players.Count; i++)
                 {
-                    Console.WriteLine("{0}. {1} --> {2} points", i + 1, allScores[i].PlayerName, allScores[i].PlayerPoints);
+                    Console.WriteLine("{0}. {1} --> {2} points", i + 1, players[i].PlayerName, players[i].PlayerPoints);
                 }
 
                 Console.WriteLine();

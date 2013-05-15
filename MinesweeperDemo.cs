@@ -26,7 +26,8 @@ namespace Minesweeper
                     playingField = gameField.Create();
                     bombsField = gameField.PlaceBombs();
 
-                    Draw.GameLoad(playingField);
+                    Draw.GameLoad();
+                    Draw.PlayingField(playingField);
                 }
 
                 Console.Write("Enter row and column: ");
