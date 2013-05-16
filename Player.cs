@@ -14,13 +14,6 @@ namespace Minesweeper
         private int playerPoints;
 
         /// <summary>
-        /// Player class empty constructor. 
-        /// </summary>
-        public Player()
-        {
-        }
-
-        /// <summary>
         /// Player class constructor.
         /// </summary>
         /// <param name="playerName">Player's name given as parameter.</param>

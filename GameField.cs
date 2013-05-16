@@ -21,13 +21,13 @@ namespace Minesweeper
         /// <param name="fieldCols">Game's field number of columns given as parameter.</param>
         public GameField(int fieldRows, int fieldCols)
         {
-            if (fieldRows <= 0 || fieldRows > 10)
+            if (fieldRows <= 1 || fieldRows > 10)
             {
-                throw new ArgumentOutOfRangeException("The rows must be between 1 and 10.");
+                throw new ArgumentOutOfRangeException("The rows must be between 2 and 10.");
             }
-            if (fieldCols <= 0 || fieldCols > 10)
+            if (fieldCols <= 1 || fieldCols > 10)
             {
-                throw new ArgumentOutOfRangeException("The cols must be between 1 and 10.");
+                throw new ArgumentOutOfRangeException("The cols must be between 2 and 10.");
             }
 
             this.fieldRows = fieldRows;
