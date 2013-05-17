@@ -1,11 +1,11 @@
-####Game: Minesweeper          
-###Team Name:  Rhenium
+#Game: Minesweeper          
+##Team Name:  Rhenium
 
-##Team Members: 
-#• Стоян Киров (kirov)
-#•	Илиян Христов (iliqnski)
-#•	Борислава Йосифова (greeny)
-#•	Александър Дръндаров (alex_dr)
+###Team Members: 
+####• Стоян Киров (kirov)
+####•	Илиян Христов (iliqnski)
+####•	Борислава Йосифова (greeny)
+####•	Александър Дръндаров (alex_dr)
 
 The URL of your TFS repository
 •	https://github.com/TeamRhenium/Minesweeper-4
