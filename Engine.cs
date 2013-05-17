@@ -32,11 +32,13 @@ namespace Minesweeper
 
             if (command.Length == 3)
             {
+                //Checks if the input rows and cols are in the bounds of the playing field
+                //Checks if the second char is 'x' => it's a turn command, else it's another or wrong command
                 if (int.TryParse(command[0].ToString(), out this.rowToCheckForBomb) &&
                     int.TryParse(command[2].ToString(), out this.colToCheckForBomb) &&
                     this.rowToCheckForBomb <= fieldWithQuestionmarks.GetLength(0) &&
                     this.colToCheckForBomb <= fieldWithQuestionmarks.GetLength(1) &&
-                    command[1] == ' ')
+                    command[1] == 'x')
                 {
                     command = "turn";
                 }
@@ -69,7 +71,7 @@ namespace Minesweeper
 
                     Draw.PlayingField(fieldWithQuestionmarks);
 
-                    IsNewGame = false;
+                    IsNewGame = true;
                     break;
 
                 case "exit":

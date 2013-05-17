@@ -5,6 +5,7 @@ namespace Minesweeper
 {
     using System;
     using System.Collections.Generic;
+    using System.Threading;
 
     /// <summary>
     /// Draws game's console.
@@ -73,6 +74,9 @@ namespace Minesweeper
                 }
 
                 Console.WriteLine();
+
+                Console.WriteLine("The game will begin in 5 seconds.");
+                Thread.Sleep(5000);
             }
             else
             {

@@ -8,7 +8,7 @@ namespace Minesweeper.Tests
     {
         [TestMethod]
         [ExpectedException(typeof(ArgumentOutOfRangeException), "The rows must be between 2 and 10.")]
-        public void TestGameField_WithOneRow()
+        public void TestGameField_WithZeroRows()
         {
             GameField gameField = new GameField(0, 5);
         }
