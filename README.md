@@ -1,4 +1,5 @@
-#Game: Minesweeper          
+#Game: Minesweeper    
+##Telerik Academy - Quality Programming Code - Team Work
 ##Team Name:  Rhenium
 
 ###Team Members: 
@@ -6,9 +7,6 @@
 ####•	Илиян Христов (iliqnski)
 ####•	Борислава Йосифова (greeny)
 ####•	Александър Дръндаров (alex_dr)
-
-The URL of your TFS repository
-•	https://github.com/TeamRhenium/Minesweeper-4
 
 Game purpose:
 •	It is a dynamic, single player game named Minesweeper.
